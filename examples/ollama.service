@@ -26,12 +26,11 @@ RestartSec=3
 # LimitNOFILE=1048576
 # MemoryLimit=8G
 
-# Security settings
-NoNewPrivileges=true
-PrivateTmp=true
-ProtectSystem=strict
-ProtectHome=read-only
-ReadWritePaths=/home/webadmin/.ollama
+# Security settings (optional - uncomment for hardened security)
+# NoNewPrivileges=true
+# PrivateTmp=true
+# ProtectSystem=full
+# ReadWritePaths=/home/webadmin/.ollama
 
 [Install]
 WantedBy=multi-user.target

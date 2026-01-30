@@ -273,8 +273,8 @@ sudo ufw allow 22/tcp
 sudo ufw allow 80/tcp
 sudo ufw allow 443/tcp
 
-# Allow Ollama port
-sudo ufw allow 11434/tcp
+# Note: Don't expose Ollama port directly
+# Access it through Nginx reverse proxy instead
 
 # Enable firewall
 sudo ufw enable
@@ -882,7 +882,7 @@ netstat -tulpn                     # Open ports</code></pre>
 
                 <h3>Additional Resources:</h3>
                 <ul>
-                    <li><a href="https://ollama.ai/library" target="_blank">Ollama Model Library</a></li>
+                    <li><a href="https://ollama.com/library" target="_blank">Ollama Model Library</a></li>
                     <li><a href="https://nginx.org/en/docs/" target="_blank">Nginx Documentation</a></li>
                     <li><a href="https://letsencrypt.org/" target="_blank">Let's Encrypt</a></li>
                     <li><a href="https://flutter.dev/docs" target="_blank">Flutter Documentation</a></li>

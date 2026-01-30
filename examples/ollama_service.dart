@@ -6,8 +6,8 @@ import 'package:http/http.dart' as http;
 /// This service handles communication with the Ollama API
 /// running on your VPS server.
 class OllamaService {
-  // Replace with your actual domain
-  final String baseUrl = 'https://learnwithus.cloud/api';
+  // TODO: Replace with your actual domain
+  final String baseUrl = 'https://yourdomain.com/api';
   
   // Timeout for API requests (2 minutes for long-running AI tasks)
   final Duration timeout = const Duration(seconds: 120);
@@ -41,9 +41,7 @@ class OllamaService {
         final data = jsonDecode(response.body);
         return data['response'] ?? 'No response generated';
       } else {
-        throw Exception(
-          'Failed to generate response: ${response.statusCode} - ${response.body}',
-        );
+        throw Exception('Failed to generate response (${response.statusCode})');
       }
     } catch (e) {
       throw Exception('Error connecting to Ollama: $e');

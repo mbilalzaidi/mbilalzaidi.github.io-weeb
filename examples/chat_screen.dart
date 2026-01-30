@@ -99,7 +99,7 @@ class _ChatScreenState extends State<ChatScreen> {
     } catch (e) {
       setState(() {
         _messages.add(ChatMessage(
-          text: 'Error: ${e.toString()}',
+          text: 'Unable to get a response. Please try again.',
           isUser: false,
           timestamp: DateTime.now(),
           isError: true,
@@ -333,7 +333,9 @@ class _ChatScreenState extends State<ChatScreen> {
                     onPressed: _isLoading || !_serviceAvailable
                         ? null
                         : _sendMessage,
-                    backgroundColor: Colors.deepPurple,
+                    backgroundColor: _isLoading || !_serviceAvailable
+                        ? Colors.grey
+                        : Colors.deepPurple,
                     child: const Icon(Icons.send),
                   ),
                 ],
