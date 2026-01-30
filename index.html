@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hostinger KVM VPS Setup Guide - Ollama, Nginx & Flutter</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        header h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            color: #666;
+            font-size: 1.2em;
+        }
+        
+        .content {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        h2 {
+            color: #667eea;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+        
+        h3 {
+            color: #764ba2;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .step {
+            background: #f8f9fa;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid #667eea;
+            border-radius: 5px;
+        }
+        
+        .step h3 {
+            margin-top: 0;
+        }
+        
+        code {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+        
+        pre code {
+            padding: 0;
+            background: none;
+        }
+        
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        
+        .info {
+            background: #d1ecf1;
+            border-left: 4px solid #17a2b8;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        
+        .success {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        
+        ul, ol {
+            margin-left: 30px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        
+        li {
+            margin: 8px 0;
+        }
+        
+        .toc {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+        }
+        
+        .toc h2 {
+            margin-top: 0;
+        }
+        
+        .toc ul {
+            list-style: none;
+            margin-left: 0;
+        }
+        
+        .toc a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        .toc a:hover {
+            text-decoration: underline;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: white;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 Complete VPS Setup Guide</h1>
+            <p>Setting up Hostinger KVM VPS with Ollama, Nginx, SSL & Flutter</p>
+            <p><small>A Beginner-Friendly Step-by-Step Tutorial</small></p>
+        </header>
+        
+        <div class="content">
+            <div class="toc">
+                <h2>📋 Table of Contents</h2>
+                <ul>
+                    <li><a href="#introduction">1. Introduction</a></li>
+                    <li><a href="#prerequisites">2. Prerequisites</a></li>
+                    <li><a href="#vps-setup">3. Initial VPS Setup</a></li>
+                    <li><a href="#security">4. Security Configuration</a></li>
+                    <li><a href="#ollama">5. Installing Ollama</a></li>
+                    <li><a href="#nginx">6. Installing & Configuring Nginx</a></li>
+                    <li><a href="#ssl">7. SSL Certificate Setup</a></li>
+                    <li><a href="#domain">8. Domain Configuration</a></li>
+                    <li><a href="#flutter">9. Flutter App Integration</a></li>
+                    <li><a href="#troubleshooting">10. Troubleshooting</a></li>
+                </ul>
+            </div>
+
+            <section id="introduction">
+                <h2>1. Introduction</h2>
+                <p>This comprehensive guide will walk you through setting up a complete production environment on a Hostinger KVM VPS. By the end of this tutorial, you'll have:</p>
+                <ul>
+                    <li>A secure VPS running Ubuntu</li>
+                    <li>Ollama AI service running on port 11434</li>
+                    <li>Nginx as a reverse proxy</li>
+                    <li>SSL certificates for secure HTTPS connections</li>
+                    <li>Your domain (learnwithus.cloud) properly configured</li>
+                    <li>A Flutter app connected to your backend</li>
+                </ul>
+            </section>
+
+            <section id="prerequisites">
+                <h2>2. Prerequisites</h2>
+                <div class="info">
+                    <strong>Before you begin, make sure you have:</strong>
+                    <ul>
+                        <li>A Hostinger KVM 4 VPS subscription</li>
+                        <li>Domain name: learnwithus.cloud</li>
+                        <li>SSH client (Terminal on Mac/Linux, PuTTY on Windows)</li>
+                        <li>Basic command line knowledge</li>
+                        <li>Flutter development environment set up locally</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="vps-setup">
+                <h2>3. Initial VPS Setup</h2>
+                
+                <div class="step">
+                    <h3>Step 3.1: Access Your VPS</h3>
+                    <p>After purchasing your Hostinger KVM VPS, you'll receive:</p>
+                    <ul>
+                        <li>IP address (e.g., 192.168.1.100)</li>
+                        <li>Root username and password</li>
+                    </ul>
+                    <p>Connect to your VPS via SSH:</p>
+                    <pre><code>ssh root@your-server-ip</code></pre>
+                    <div class="warning">
+                        <strong>⚠️ Note:</strong> Replace <code>your-server-ip</code> with your actual VPS IP address.
+                    </div>
+                </div>
+
+                <div class="step">
+                    <h3>Step 3.2: Update Your System</h3>
+                    <p>First, update all packages to their latest versions:</p>
+                    <pre><code>apt update && apt upgrade -y</code></pre>
+                    <p>This may take a few minutes depending on your connection speed.</p>
+                </div>
+
+                <div class="step">
+                    <h3>Step 3.3: Create a Non-Root User</h3>
+                    <p>For security reasons, create a new user instead of using root:</p>
+                    <pre><code># Create new user
+adduser webadmin
+
+# Add user to sudo group
+usermod -aG sudo webadmin
+
+# Switch to new user
+su - webadmin</code></pre>
+                </div>
+            </section>
+
+            <section id="security">
+                <h2>4. Security Configuration</h2>
+                
+                <div class="step">
+                    <h3>Step 4.1: Configure Firewall (UFW)</h3>
+                    <p>Set up UFW (Uncomplicated Firewall) to protect your server:</p>
+                    <pre><code># Install UFW
+sudo apt install ufw -y
+
+# Allow SSH (important: do this first!)
+sudo ufw allow 22/tcp
+
+# Allow HTTP and HTTPS
+sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
+
+# Allow Ollama port
+sudo ufw allow 11434/tcp
+
+# Enable firewall
+sudo ufw enable
+
+# Check status
+sudo ufw status</code></pre>
+                    <div class="warning">
+                        <strong>⚠️ Critical:</strong> Always allow SSH (port 22) before enabling the firewall, or you'll lock yourself out!
+                    </div>
+                </div>
+
+                <div class="step">
+                    <h3>Step 4.2: Configure SSH Key Authentication</h3>
+                    <p>On your local machine, generate an SSH key pair:</p>
+                    <pre><code># On your local machine
+ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
+
+# Copy public key to server
+ssh-copy-id webadmin@your-server-ip</code></pre>
+                    <p>Now you can login without a password!</p>
+                </div>
+            </section>
+
+            <section id="ollama">
+                <h2>5. Installing Ollama</h2>
+                
+                <div class="step">
+                    <h3>Step 5.1: Install Ollama</h3>
+                    <p>Ollama is an easy-to-use tool for running large language models locally. Install it with:</p>
+                    <pre><code># Install Ollama
+curl -fsSL https://ollama.com/install.sh | sh
+
+# Verify installation
+ollama --version</code></pre>
+                </div>
+
+                <div class="step">
+                    <h3>Step 5.2: Configure Ollama as a System Service</h3>
+                    <p>Create a systemd service file to run Ollama automatically:</p>
+                    <pre><code>sudo nano /etc/systemd/system/ollama.service</code></pre>
+                    <p>Add the following content:</p>
+                    <pre><code>[Unit]
+Description=Ollama Service
+After=network.target
+
+[Service]
+Type=simple
+User=webadmin
+Environment="OLLAMA_HOST=0.0.0.0:11434"
+ExecStart=/usr/local/bin/ollama serve
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target</code></pre>
+                    <p>Enable and start the service:</p>
+                    <pre><code>sudo systemctl daemon-reload
+sudo systemctl enable ollama
+sudo systemctl start ollama
+sudo systemctl status ollama</code></pre>
+                </div>
+
+                <div class="step">
+                    <h3>Step 5.3: Pull a Model</h3>
+                    <p>Download a language model (we'll use llama2 as an example):</p>
+                    <pre><code># Pull llama2 model
+ollama pull llama2
+
+# Test it
+ollama run llama2 "Hello, how are you?"</code></pre>
+                    <div class="info">
+                        <strong>💡 Tip:</strong> You can also try other models like <code>mistral</code>, <code>codellama</code>, or <code>phi</code>. Use <code>ollama list</code> to see installed models.
+                    </div>
+                </div>
+
+                <div class="step">
+                    <h3>Step 5.4: Test Ollama API</h3>
+                    <p>Verify that Ollama is accessible on port 11434:</p>
+                    <pre><code># Test locally
+curl http://localhost:11434/api/generate -d '{
+  "model": "llama2",
+  "prompt": "Why is the sky blue?",
+  "stream": false
+}'</code></pre>
+                </div>
+            </section>
+
+            <section id="nginx">
+                <h2>6. Installing & Configuring Nginx</h2>
+                
+                <div class="step">
+                    <h3>Step 6.1: Install Nginx</h3>
+                    <pre><code># Install Nginx
+sudo apt install nginx -y
+
+# Start and enable Nginx
+sudo systemctl start nginx
+sudo systemctl enable nginx
+
+# Check status
+sudo systemctl status nginx</code></pre>
+                </div>
+
+                <div class="step">
+                    <h3>Step 6.2: Configure Nginx for Ollama</h3>
+                    <p>Create a new Nginx configuration for your domain:</p>
+                    <pre><code>sudo nano /etc/nginx/sites-available/learnwithus.cloud</code></pre>
+                    <p>Add the following configuration:</p>
+                    <pre><code>server {
+    listen 80;
+    server_name learnwithus.cloud www.learnwithus.cloud;
+
+    # Redirect to HTTPS (will be enabled after SSL setup)
+    # return 301 https://$server_name$request_uri;
+
+    location / {
+        root /var/www/html;
+        index index.html;
+    }
+
+    # Ollama API endpoint
+    location /api/ {
+        proxy_pass http://localhost:11434/api/;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        
+        # Increase timeouts for long-running AI requests
+        proxy_read_timeout 300;
+        proxy_connect_timeout 300;
+        proxy_send_timeout 300;
+    }
+}</code></pre>
+                </div>
+
+                <div class="step">
+                    <h3>Step 6.3: Enable the Site</h3>
+                    <pre><code># Create symbolic link
+sudo ln -s /etc/nginx/sites-available/learnwithus.cloud /etc/nginx/sites-enabled/
+
+# Remove default site
+sudo rm /etc/nginx/sites-enabled/default
+
+# Test configuration
+sudo nginx -t
+
+# Reload Nginx
+sudo systemctl reload nginx</code></pre>
+                </div>
+            </section>
+
+            <section id="ssl">
+                <h2>7. SSL Certificate Setup</h2>
+                
+                <div class="step">
+                    <h3>Step 7.1: Install Certbot</h3>
+                    <p>Certbot is a tool for obtaining free SSL certificates from Let's Encrypt:</p>
+                    <pre><code># Install Certbot
+sudo apt install certbot python3-certbot-nginx -y</code></pre>
+                </div>
+
+                <div class="step">
+                    <h3>Step 7.2: Obtain SSL Certificate</h3>
+                    <div class="warning">
+                        <strong>⚠️ Important:</strong> Before running this command, make sure your domain DNS is pointing to your VPS IP address!
+                    </div>
+                    <pre><code># Get certificate
+sudo certbot --nginx -d learnwithus.cloud -d www.learnwithus.cloud
+
+# Follow the prompts:
+# - Enter your email address
+# - Agree to terms of service
+# - Choose whether to redirect HTTP to HTTPS (recommended: yes)</code></pre>
+                </div>
+
+                <div class="step">
+                    <h3>Step 7.3: Auto-Renewal Setup</h3>
+                    <p>Certbot automatically sets up renewal. Test it with:</p>
+                    <pre><code># Test renewal
+sudo certbot renew --dry-run
+
+# Check renewal timer
+sudo systemctl status certbot.timer</code></pre>
+                    <div class="success">
+                        <strong>✅ Success!</strong> Your SSL certificate will automatically renew before expiration.
+                    </div>
+                </div>
+
+                <div class="step">
+                    <h3>Step 7.4: Update Nginx Configuration for HTTPS</h3>
+                    <p>After Certbot, your Nginx config will be automatically updated. Verify the changes:</p>
+                    <pre><code>sudo nano /etc/nginx/sites-available/learnwithus.cloud</code></pre>
+                    <p>You should see SSL configuration added by Certbot. Make sure the Ollama proxy configuration is still present.</p>
+                </div>
+            </section>
+
+            <section id="domain">
+                <h2>8. Domain Configuration</h2>
+                
+                <div class="step">
+                    <h3>Step 8.1: Configure DNS Records</h3>
+                    <p>In your domain registrar's control panel (where you registered learnwithus.cloud), add these DNS records:</p>
+                    <pre><code>Type: A
+Name: @
+Value: [Your VPS IP Address]
+TTL: 3600
+
+Type: A
+Name: www
+Value: [Your VPS IP Address]
+TTL: 3600
+
+Type: CNAME
+Name: api
+Value: learnwithus.cloud
+TTL: 3600</code></pre>
+                    <div class="info">
+                        <strong>💡 Note:</strong> DNS propagation can take 24-48 hours, but usually happens within a few minutes to an hour.
+                    </div>
+                </div>
+
+                <div class="step">
+                    <h3>Step 8.2: Verify Domain Resolution</h3>
+                    <p>Check if your domain is resolving correctly:</p>
+                    <pre><code># Check DNS resolution
+nslookup learnwithus.cloud
+
+# Test with ping
+ping learnwithus.cloud
+
+# Test HTTP access
+curl http://learnwithus.cloud</code></pre>
+                </div>
+            </section>
+
+            <section id="flutter">
+                <h2>9. Flutter App Integration</h2>
+                
+                <div class="step">
+                    <h3>Step 9.1: Create Flutter HTTP Client</h3>
+                    <p>In your Flutter project, add the <code>http</code> package to <code>pubspec.yaml</code>:</p>
+                    <pre><code>dependencies:
+  flutter:
+    sdk: flutter
+  http: ^1.1.0</code></pre>
+                    <p>Run:</p>
+                    <pre><code>flutter pub get</code></pre>
+                </div>
+
+                <div class="step">
+                    <h3>Step 9.2: Create Ollama Service Class</h3>
+                    <p>Create a new file <code>lib/services/ollama_service.dart</code>:</p>
+                    <pre><code>import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+class OllamaService {
+  final String baseUrl = 'https://learnwithus.cloud/api';
+  
+  Future&lt;String&gt; generateResponse(String prompt, String model) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/generate'),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'model': model,
+          'prompt': prompt,
+          'stream': false,
+        }),
+      ).timeout(const Duration(seconds: 120));
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return data['response'] ?? 'No response';
+      } else {
+        throw Exception('Failed to generate response: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Error connecting to Ollama: $e');
+    }
+  }
+
+  Future&lt;List&lt;String&gt;&gt; listModels() async {
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/tags'),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return (data['models'] as List)
+            .map((model) =&gt; model['name'] as String)
+            .toList();
+      } else {
+        throw Exception('Failed to list models');
+      }
+    } catch (e) {
+      throw Exception('Error listing models: $e');
+    }
+  }
+}</code></pre>
+                </div>
+
+                <div class="step">
+                    <h3>Step 9.3: Example Flutter UI Integration</h3>
+                    <p>Create a simple chat interface <code>lib/screens/chat_screen.dart</code>:</p>
+                    <pre><code>import 'package:flutter/material.dart';
+import '../services/ollama_service.dart';
+
+class ChatScreen extends StatefulWidget {
+  const ChatScreen({Key? key}) : super(key: key);
+
+  @override
+  State&lt;ChatScreen&gt; createState() => _ChatScreenState();
+}
+
+class _ChatScreenState extends State&lt;ChatScreen&gt; {
+  final TextEditingController _controller = TextEditingController();
+  final OllamaService _ollamaService = OllamaService();
+  final List&lt;Map&lt;String, String&gt;&gt; _messages = [];
+  bool _isLoading = false;
+
+  void _sendMessage() async {
+    if (_controller.text.trim().isEmpty) return;
+
+    final userMessage = _controller.text.trim();
+    setState(() {
+      _messages.add({'role': 'user', 'content': userMessage});
+      _isLoading = true;
+    });
+    _controller.clear();
+
+    try {
+      final response = await _ollamaService.generateResponse(
+        userMessage,
+        'llama2', // or any model you have installed
+      );
+      
+      setState(() {
+        _messages.add({'role': 'assistant', 'content': response});
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _messages.add({
+          'role': 'error',
+          'content': 'Error: ${e.toString()}'
+        });
+        _isLoading = false;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Ollama Chat'),
+        backgroundColor: Colors.deepPurple,
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: ListView.builder(
+              itemCount: _messages.length,
+              itemBuilder: (context, index) {
+                final message = _messages[index];
+                final isUser = message['role'] == 'user';
+                
+                return Align(
+                  alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
+                  child: Container(
+                    margin: const EdgeInsets.all(8),
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: isUser ? Colors.blue[100] : Colors.grey[200],
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(message['content'] ?? ''),
+                  ),
+                );
+              },
+            ),
+          ),
+          if (_isLoading)
+            const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: CircularProgressIndicator(),
+            ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _controller,
+                    decoration: const InputDecoration(
+                      hintText: 'Type a message...',
+                      border: OutlineInputBorder(),
+                    ),
+                    onSubmitted: (_) => _sendMessage(),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                IconButton(
+                  icon: const Icon(Icons.send),
+                  onPressed: _sendMessage,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}</code></pre>
+                </div>
+
+                <div class="step">
+                    <h3>Step 9.4: Testing the Flutter App</h3>
+                    <p>Test your Flutter app connection:</p>
+                    <pre><code># Run Flutter app
+flutter run
+
+# Or build for release
+flutter build apk  # for Android
+flutter build ios  # for iOS</code></pre>
+                    <div class="info">
+                        <strong>💡 Debugging Tip:</strong> If you get connection errors, check:
+                        <ul>
+                            <li>Your VPS firewall allows port 443</li>
+                            <li>Nginx is running: <code>sudo systemctl status nginx</code></li>
+                            <li>Ollama is running: <code>sudo systemctl status ollama</code></li>
+                            <li>SSL certificate is valid</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section id="troubleshooting">
+                <h2>10. Troubleshooting</h2>
+                
+                <div class="step">
+                    <h3>Common Issue 1: Cannot Connect to VPS</h3>
+                    <p><strong>Problem:</strong> SSH connection refused or times out</p>
+                    <p><strong>Solutions:</strong></p>
+                    <ul>
+                        <li>Verify IP address is correct</li>
+                        <li>Check if VPS is running in Hostinger panel</li>
+                        <li>Ensure port 22 is open in firewall</li>
+                        <li>Try using VNC console from Hostinger panel</li>
+                    </ul>
+                    <pre><code># Check SSH service
+sudo systemctl status ssh
+
+# Restart SSH if needed
+sudo systemctl restart ssh</code></pre>
+                </div>
+
+                <div class="step">
+                    <h3>Common Issue 2: Ollama Not Responding</h3>
+                    <p><strong>Problem:</strong> Ollama service not accessible</p>
+                    <p><strong>Solutions:</strong></p>
+                    <pre><code># Check Ollama status
+sudo systemctl status ollama
+
+# View logs
+sudo journalctl -u ollama -f
+
+# Restart Ollama
+sudo systemctl restart ollama
+
+# Test locally
+curl http://localhost:11434/api/tags</code></pre>
+                </div>
+
+                <div class="step">
+                    <h3>Common Issue 3: Nginx 502 Bad Gateway</h3>
+                    <p><strong>Problem:</strong> Getting 502 error when accessing the site</p>
+                    <p><strong>Solutions:</strong></p>
+                    <pre><code># Check Nginx error logs
+sudo tail -f /var/log/nginx/error.log
+
+# Test Nginx configuration
+sudo nginx -t
+
+# Verify Ollama is running
+curl http://localhost:11434/api/tags
+
+# Check if ports are listening
+sudo netstat -tulpn | grep -E '(80|443|11434)'</code></pre>
+                </div>
+
+                <div class="step">
+                    <h3>Common Issue 4: SSL Certificate Problems</h3>
+                    <p><strong>Problem:</strong> HTTPS not working or certificate errors</p>
+                    <p><strong>Solutions:</strong></p>
+                    <pre><code># Check certificate status
+sudo certbot certificates
+
+# Renew certificate manually
+sudo certbot renew
+
+# Test certificate
+openssl s_client -connect learnwithus.cloud:443 -servername learnwithus.cloud</code></pre>
+                </div>
+
+                <div class="step">
+                    <h3>Common Issue 5: DNS Not Resolving</h3>
+                    <p><strong>Problem:</strong> Domain doesn't point to your server</p>
+                    <p><strong>Solutions:</strong></p>
+                    <pre><code># Check DNS resolution
+nslookup learnwithus.cloud
+
+# Check from different DNS server
+nslookup learnwithus.cloud 8.8.8.8
+
+# Clear local DNS cache (on your local machine)
+# Mac/Linux:
+sudo dscacheutil -flushcache
+
+# Windows:
+ipconfig /flushdns</code></pre>
+                    <p>Wait 24-48 hours for DNS propagation if you just updated the records.</p>
+                </div>
+
+                <div class="step">
+                    <h3>Common Issue 6: Flutter App Connection Errors</h3>
+                    <p><strong>Problem:</strong> Flutter app can't connect to backend</p>
+                    <p><strong>Solutions:</strong></p>
+                    <ul>
+                        <li>Verify HTTPS is working in browser first</li>
+                        <li>Check if using correct URL (https://learnwithus.cloud/api)</li>
+                        <li>For Android: Add internet permission in AndroidManifest.xml</li>
+                        <li>For iOS: Configure App Transport Security if needed</li>
+                        <li>Add error handling and logging to see exact error</li>
+                    </ul>
+                    <p>Android permission (<code>android/app/src/main/AndroidManifest.xml</code>):</p>
+                    <pre><code>&lt;uses-permission android:name="android.permission.INTERNET"/&gt;</code></pre>
+                </div>
+
+                <div class="step">
+                    <h3>Useful Commands Reference</h3>
+                    <pre><code># System Management
+sudo systemctl status [service]    # Check service status
+sudo systemctl restart [service]   # Restart service
+sudo systemctl enable [service]    # Enable on boot
+sudo journalctl -u [service] -f    # View live logs
+
+# Nginx
+sudo nginx -t                      # Test config
+sudo systemctl reload nginx        # Reload config
+sudo tail -f /var/log/nginx/access.log  # View access logs
+sudo tail -f /var/log/nginx/error.log   # View error logs
+
+# Ollama
+ollama list                        # List models
+ollama pull [model]                # Download model
+ollama rm [model]                  # Remove model
+ollama ps                          # Show running models
+
+# Firewall
+sudo ufw status                    # Check firewall status
+sudo ufw allow [port]              # Open port
+sudo ufw delete allow [port]       # Close port
+
+# System Resources
+htop                               # Interactive process viewer
+df -h                              # Disk usage
+free -h                            # Memory usage
+netstat -tulpn                     # Open ports</code></pre>
+                </div>
+            </section>
+
+            <section id="next-steps">
+                <h2>🎉 Congratulations!</h2>
+                <div class="success">
+                    <p>You've successfully set up a complete production environment! Your VPS now has:</p>
+                    <ul>
+                        <li>✅ Secure SSH access with key authentication</li>
+                        <li>✅ UFW firewall configured</li>
+                        <li>✅ Ollama AI service running on port 11434</li>
+                        <li>✅ Nginx reverse proxy</li>
+                        <li>✅ SSL certificates from Let's Encrypt</li>
+                        <li>✅ Domain configured and pointing to your server</li>
+                        <li>✅ Flutter app ready to connect</li>
+                    </ul>
+                </div>
+
+                <h3>Next Steps:</h3>
+                <ul>
+                    <li>Set up monitoring (e.g., Netdata, Grafana)</li>
+                    <li>Configure automated backups</li>
+                    <li>Implement rate limiting in Nginx</li>
+                    <li>Set up logging and analytics</li>
+                    <li>Add more AI models to Ollama</li>
+                    <li>Enhance your Flutter app with more features</li>
+                </ul>
+
+                <h3>Additional Resources:</h3>
+                <ul>
+                    <li><a href="https://ollama.ai/library" target="_blank">Ollama Model Library</a></li>
+                    <li><a href="https://nginx.org/en/docs/" target="_blank">Nginx Documentation</a></li>
+                    <li><a href="https://letsencrypt.org/" target="_blank">Let's Encrypt</a></li>
+                    <li><a href="https://flutter.dev/docs" target="_blank">Flutter Documentation</a></li>
+                    <li><a href="https://www.digitalocean.com/community/tutorials" target="_blank">DigitalOcean Tutorials</a></li>
+                </ul>
+            </section>
+        </div>
+        
+        <footer>
+            <p>Created with ❤️ for beginners learning VPS management</p>
+            <p><small>Last updated: January 2026</small></p>
+        </footer>
+    </div>
+</body>
+</html>
