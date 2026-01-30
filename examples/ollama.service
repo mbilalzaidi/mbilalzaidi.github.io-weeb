@@ -1,0 +1,36 @@
+# Ollama Systemd Service Configuration
+# File: /etc/systemd/system/ollama.service
+
+[Unit]
+Description=Ollama Service - Large Language Model Server
+Documentation=https://ollama.ai/
+After=network.target
+
+[Service]
+Type=simple
+User=webadmin
+Group=webadmin
+
+# Environment variables
+Environment="OLLAMA_HOST=0.0.0.0:11434"
+Environment="OLLAMA_MODELS=/home/webadmin/.ollama/models"
+
+# Start command
+ExecStart=/usr/local/bin/ollama serve
+
+# Restart policy
+Restart=always
+RestartSec=3
+
+# Resource limits (optional - adjust based on your VPS)
+# LimitNOFILE=1048576
+# MemoryLimit=8G
+
+# Security settings (optional - uncomment for hardened security)
+# NoNewPrivileges=true
+# PrivateTmp=true
+# ProtectSystem=full
+# ReadWritePaths=/home/webadmin/.ollama
+
+[Install]
+WantedBy=multi-user.target
